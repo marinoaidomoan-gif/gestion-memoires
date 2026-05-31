@@ -17,11 +17,10 @@ class User extends Model {
         $user = $stmt->fetch();
 
         if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['idUser']  = $user['idUser'];
-            $_SESSION['name']    = $user['name'];
-            $_SESSION['prenom']  = $user['prenom'];
-            $_SESSION['email']   = $user['email'];
-            $_SESSION['role']    = $user['role'];
+            $_SESSION['idUser'] = $user['idUser'];
+            $_SESSION['name']   = $user['name'];
+            $_SESSION['email']  = $user['email'];
+            $_SESSION['role']   = $user['role'];
             return true;
         }
         return false;
@@ -47,8 +46,7 @@ class User extends Model {
     }
 
     // -------------------------------------------------------
-    // Trouver un utilisateur par id avec ses infos complètes
-    // (jointure avec la table de spécialisation selon le rôle)
+    // Trouver un utilisateur par id avec ses infos de rôle
     // -------------------------------------------------------
     public function findByIdWithRole(int $id): ?array {
         $stmt = $this->db->prepare(
@@ -59,7 +57,6 @@ class User extends Model {
 
         if (!$user) return null;
 
-        // Jointure avec la table de spécialisation selon le rôle
         switch ($user['role']) {
             case 'etudiant_diplome':
                 $stmt2 = $this->db->prepare(
@@ -87,8 +84,6 @@ class User extends Model {
 
         $stmt2->execute([$id]);
         $details = $stmt2->fetch();
-
-        // Fusionner les deux tableaux
         return $details ? array_merge($user, $details) : $user;
     }
 
@@ -105,50 +100,44 @@ class User extends Model {
     }
 
     // -------------------------------------------------------
-    // Liker un mémoire
+    // Liker/unliker un mémoire (toggle)
+    // Retourne true = liké, false = unliké
     // -------------------------------------------------------
     public function liker(int $idMemoire): bool {
-        // Vérifier si déjà liké
         $stmt = $this->db->prepare(
-            "SELECT idLike FROM likes
-             WHERE idUser = ? AND idMemoire = ?"
+            "SELECT idLike FROM likes WHERE idUser = ? AND idMemoire = ?"
         );
         $stmt->execute([$_SESSION['idUser'], $idMemoire]);
 
         if ($stmt->fetch()) {
-            // Déjà liké → unlike
             $stmt2 = $this->db->prepare(
                 "DELETE FROM likes WHERE idUser = ? AND idMemoire = ?"
             );
             $stmt2->execute([$_SESSION['idUser'], $idMemoire]);
-            return false; // false = unliké
+            return false;
         }
 
-        // Pas encore liké → like
         $stmt2 = $this->db->prepare(
             "INSERT INTO likes (idUser, idMemoire) VALUES (?, ?)"
         );
         $stmt2->execute([$_SESSION['idUser'], $idMemoire]);
-        return true; // true = liké
+        return true;
     }
 
     // -------------------------------------------------------
-    // Créer un compte utilisateur (par le DirecteurEtudes)
+    // Créer un compte utilisateur (utilisé par les sous-classes)
     // -------------------------------------------------------
     public function creerCompte(array $data): int {
-        // Hasher le mot de passe
         $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
 
         $stmt = $this->db->prepare(
-            "INSERT INTO users (name, prenom, email, password, telephone, role)
-             VALUES (?, ?, ?, ?, ?, ?)"
+            "INSERT INTO users (name, email, password, role)
+             VALUES (?, ?, ?, ?)"
         );
         $stmt->execute([
             $data['name'],
-            $data['prenom'],
             $data['email'],
             $data['password'],
-            $data['telephone'] ?? null,
             $data['role'],
         ]);
 
@@ -161,10 +150,11 @@ class User extends Model {
     public function getAllWithDetails(): array {
         $stmt = $this->db->query(
             "SELECT u.*,
-                    ed.matricule, ed.niveau AS niveau_diplome,
-                    ed.filiere AS filiere_diplome, ed.annee_diplome,
-                    ec.niveau AS niveau_consulteur,
-                    ec.filiere AS filiere_consulteur,
+                    ed.niveau     AS niveau_diplome,
+                    ed.filiere    AS filiere_diplome,
+                    ed.annee_diplome,
+                    ec.niveau     AS niveau_consulteur,
+                    ec.filiere    AS filiere_consulteur,
                     p.specialite, p.grade, p.departement,
                     de.bureau
              FROM users u
@@ -182,15 +172,11 @@ class User extends Model {
     // -------------------------------------------------------
     public function modifierUser(int $idUser, array $data): bool {
         $stmt = $this->db->prepare(
-            "UPDATE users
-             SET name = ?, prenom = ?, email = ?, telephone = ?
-             WHERE idUser = ?"
+            "UPDATE users SET name = ?, email = ? WHERE idUser = ?"
         );
         return $stmt->execute([
             $data['name'],
-            $data['prenom'],
             $data['email'],
-            $data['telephone'] ?? null,
             $idUser,
         ]);
     }

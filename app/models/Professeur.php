@@ -5,15 +5,13 @@ require_once __DIR__ . '/User.php';
 class Professeur extends User {
 
     // -------------------------------------------------------
-    // Créer un compte Professeur complet
+    // Créer un compte Professeur
     // Insère dans users + professeur
     // -------------------------------------------------------
     public function creerCompteProfesseur(array $data): int {
-        // 1. Insérer dans users
         $data['role'] = 'professeur';
         $idUser = $this->creerCompte($data);
 
-        // 2. Insérer dans professeur
         $stmt = $this->db->prepare(
             "INSERT INTO professeur (idUser, specialite, grade, departement)
              VALUES (?, ?, ?, ?)"
@@ -29,122 +27,57 @@ class Professeur extends User {
     }
 
     // -------------------------------------------------------
-    // Récupérer les mémoires à évaluer
-    // (mémoires dont le professeur est jury + statut en_attente)
+    // Mémoires encadrés par ce professeur
     // -------------------------------------------------------
-    public function getMemoiresAEvaluer(): array {
+    public function getMesMemoires(): array {
         $stmt = $this->db->prepare(
-            "SELECT m.*,
-                    u.name   AS nomEtudiant,
-                    u.prenom AS prenomEtudiant,
-                    ed.filiere, ed.matricule
+            "SELECT m.*, u.name AS nom_etudiant
              FROM memoire m
-             JOIN jury_memoire jm     ON jm.idMemoire   = m.idMemoire
-             JOIN users u             ON m.idEtudiant   = u.idUser
-             JOIN etudiantdiplome ed  ON m.idEtudiant   = ed.idUser
-             WHERE jm.idProfesseur = ?
-             AND m.statut IN ('en_attente', 'modification_requise')
-             ORDER BY m.date_soumission ASC"
+             LEFT JOIN users u ON m.idEtudiant = u.idUser
+             WHERE m.idProfesseur = ?
+             ORDER BY m.date_soumission DESC"
         );
         $stmt->execute([$_SESSION['idUser']]);
         return $stmt->fetchAll();
     }
 
     // -------------------------------------------------------
-    // Consulter tous les mémoires (lecture)
+    // Évaluer un mémoire : valider ou rejeter
+    // (simplifié : on met à jour directement le statut)
     // -------------------------------------------------------
-    public function getMemoiresTous(): array {
-        $stmt = $this->db->query(
-            "SELECT m.*,
-                    u.name   AS nomEtudiant,
-                    u.prenom AS prenomEtudiant,
-                    ed.filiere, ed.matricule
-             FROM memoire m
-             JOIN users u            ON m.idEtudiant = u.idUser
-             JOIN etudiantdiplome ed ON m.idEtudiant = ed.idUser
-             WHERE m.statut != 'archive'
-             ORDER BY m.date_soumission DESC"
-        );
-        return $stmt->fetchAll();
-    }
-
-    // -------------------------------------------------------
-    // Évaluer un mémoire (valider, rejeter ou demander modif)
-    // -------------------------------------------------------
-    public function evaluerMemo(int $idMemoire, string $decision, string $commentaire = ''): bool {
-        // Vérifier que le professeur est bien jury de ce mémoire
-        $stmt = $this->db->prepare(
-            "SELECT * FROM jury_memoire
-             WHERE idProfesseur = ? AND idMemoire = ?"
-        );
-        $stmt->execute([$_SESSION['idUser'], $idMemoire]);
-        if (!$stmt->fetch()) return false;
-
-        // Vérifier que la décision est valide
-        $decisionsValides = ['valide', 'rejete', 'modification_requise'];
+    public function evaluerMemo(int $idMemoire, string $decision): bool {
+        $decisionsValides = ['valide', 'rejete'];
         if (!in_array($decision, $decisionsValides)) return false;
 
-        // 1. Insérer dans validation
-        $stmt2 = $this->db->prepare(
-            "INSERT INTO validation (decision, commentaire, idMemoire, idProfesseur)
-             VALUES (?, ?, ?, ?)"
+        // Vérifier que le mémoire est bien encadré par ce professeur
+        $stmt = $this->db->prepare(
+            "SELECT idMemoire FROM memoire
+             WHERE idMemoire = ? AND idProfesseur = ? AND statut = 'en_attente'"
         );
-        $stmt2->execute([
-            $decision,
-            $commentaire,
-            $idMemoire,
-            $_SESSION['idUser'],
-        ]);
+        $stmt->execute([$idMemoire, $_SESSION['idUser']]);
+        if (!$stmt->fetch()) return false;
 
-        // 2. Mettre à jour le statut du mémoire
-        $stmt3 = $this->db->prepare(
+        $stmt2 = $this->db->prepare(
             "UPDATE memoire SET statut = ? WHERE idMemoire = ?"
         );
-        return $stmt3->execute([$decision, $idMemoire]);
+        return $stmt2->execute([$decision, $idMemoire]);
     }
 
     // -------------------------------------------------------
-    // Ajouter une observation sur une validation
-    // (appelé après evaluerMemo avec decision = modification_requise)
+    // Ajouter une observation (commentaire interne) sur un mémoire
+    // Utilise la table commentaire avec un flag interne
     // -------------------------------------------------------
-    public function ajouterObs(int $idMemoire, string $contenu): bool {
-        // Récupérer la dernière validation de ce mémoire par ce professeur
+    public function ajouterObs(int $idMemoire, string $contenu): int {
         $stmt = $this->db->prepare(
-            "SELECT idValidation FROM validation
-             WHERE idMemoire = ? AND idProfesseur = ?
-             ORDER BY date_decision DESC
-             LIMIT 1"
+            "INSERT INTO commentaire (contenu, idUser, idMemoire)
+             VALUES (?, ?, ?)"
         );
-        $stmt->execute([$idMemoire, $_SESSION['idUser']]);
-        $validation = $stmt->fetch();
-
-        if (!$validation) return false;
-
-        // Insérer l'observation
-        $stmt2 = $this->db->prepare(
-            "INSERT INTO observation (contenu, idValidation)
-             VALUES (?, ?)"
-        );
-        return $stmt2->execute([$contenu, $validation['idValidation']]);
+        $stmt->execute([$contenu, $_SESSION['idUser'], $idMemoire]);
+        return (int) $this->db->lastInsertId();
     }
 
     // -------------------------------------------------------
-    // Récupérer les observations d'une validation
-    // -------------------------------------------------------
-    public function getObservations(int $idMemoire): array {
-        $stmt = $this->db->prepare(
-            "SELECT o.*
-             FROM observation o
-             JOIN validation v ON o.idValidation = v.idValidation
-             WHERE v.idMemoire = ? AND v.idProfesseur = ?
-             ORDER BY o.date_observation ASC"
-        );
-        $stmt->execute([$idMemoire, $_SESSION['idUser']]);
-        return $stmt->fetchAll();
-    }
-
-    // -------------------------------------------------------
-    // Récupérer les infos complètes du professeur connecté
+    // Profil complet du professeur connecté
     // -------------------------------------------------------
     public function getMonProfil(): ?array {
         $stmt = $this->db->prepare(
@@ -159,12 +92,11 @@ class Professeur extends User {
     }
 
     // -------------------------------------------------------
-    // Récupérer la liste de tous les professeurs
+    // Liste de tous les professeurs (statique, utile au directeur)
     // -------------------------------------------------------
     public static function getTous(PDO $db): array {
         $stmt = $db->query(
-            "SELECT u.idUser, u.name, u.prenom,
-                    p.specialite, p.grade, p.departement
+            "SELECT u.idUser, u.name, p.specialite, p.grade, p.departement
              FROM users u
              JOIN professeur p ON u.idUser = p.idUser
              ORDER BY u.name ASC"
