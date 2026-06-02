@@ -146,10 +146,17 @@
 
         <?php if ($memoire['fichier']): ?>
             <p style="margin-top:1rem">
-                <a href="uploads/<?= htmlspecialchars($memoire['fichier']) ?>"
-                   target="_blank" class="btn-primary" style="text-decoration:none;display:inline-block">
-                    📎 Télécharger le PDF
-                </a>
+                <?php if ($memoire['fichier']): ?>
+<div style="margin-top:1rem">
+    <h3 style="margin-bottom:.8rem">📖 Lire le mémoire</h3>
+    <iframe
+        src="index.php?url=memoire/lire/<?= $memoire['idMemoire'] ?>"
+        width="100%"
+        height="700px"
+        style="border:1px solid #ddd; border-radius:8px">
+    </iframe>
+</div>
+<?php endif; ?>
             </p>
         <?php endif; ?>
 

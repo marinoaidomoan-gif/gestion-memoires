@@ -164,4 +164,32 @@ class MemoireController extends Controller {
         $this->memoireModel->changerStatut((int)$id, 'rejete', $_SESSION['user']['idUser']);
         $this->redirect('index.php?url=memoire');
     }
+
+// GET : affiche le PDF dans le navigateur (sans téléchargement)
+public function lire(string $id): void {
+    $this->requireAuth();
+
+    $memoire = $this->memoireModel->find((int)$id);
+
+    if (!$memoire || empty($memoire['fichier'])) {
+        http_response_code(404);
+        die('<h1>Fichier introuvable</h1>');
+    }
+
+    $fichier = __DIR__ . '/../../public/uploads/' . $memoire['fichier'];
+
+    if (!file_exists($fichier)) {
+        http_response_code(404);
+        die('<h1>Fichier introuvable sur le serveur</h1>');
+    }
+
+    // inline = afficher dans le navigateur
+    // attachment = forcer le téléchargement
+    header('Content-Type: application/pdf');
+    header('Content-Disposition: inline; filename="memoire.pdf"');
+    header('Cache-Control: private, max-age=0, must-revalidate');
+    header('X-Content-Type-Options: nosniff');
+    readfile($fichier);
+    exit;
+}
 }

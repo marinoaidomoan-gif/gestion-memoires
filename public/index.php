@@ -30,7 +30,7 @@ $router->add('GET',  'memoire/soumettre',     'MemoireController', 'soumettreFor
 $router->add('POST', 'memoire/soumettre',     'MemoireController', 'soumettre');
 $router->add('POST', 'memoire/valider/:id',   'MemoireController', 'valider');
 $router->add('POST', 'memoire/rejeter/:id',   'MemoireController', 'rejeter');
-
+$router->add('GET', 'memoire/lire/:id', 'MemoireController', 'lire');
 // --- Commentaires ---
 $router->add('POST', 'commentaire/ajouter',        'CommentaireController', 'ajouter');
 $router->add('POST', 'commentaire/modifier/:id',   'CommentaireController', 'modifier');

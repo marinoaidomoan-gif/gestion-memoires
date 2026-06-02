@@ -3,11 +3,10 @@
 class Database {
     private static ?Database $instance = null;
     private PDO $pdo;
-
-    private string $host     = 'localhost';
-    private string $dbname   = 'gestion_memoires';
-    private string $user     = 'root';
-    private string $password = '';
+    private string $host     = 'sql107.infinityfree.com';
+    private string $dbname   = 'if0_42078155_gestion_memoire';
+    private string $user     = 'if0_42078155';
+    private string $password = '4BSc6ZzNdobh';
     private string $charset  = 'utf8mb4';
 
     private function __construct() {
