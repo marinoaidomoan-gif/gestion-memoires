@@ -4,7 +4,7 @@
 // Affichage complet + commentaires + likes
 ?>
 
-<?php include APP_ROOT . '/views/layouts/header.php'; ?>
+<?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
 <div class="container memoire-detail">
     
@@ -135,4 +135,4 @@
 <script src="/js/commentaire.js"></script>
 <script src="/js/like.js"></script>
 
-<?php include APP_ROOT . '/views/layouts/footer.php'; ?>
+<?php require_once __DIR__ . '/../layouts/footer.php'; ?>

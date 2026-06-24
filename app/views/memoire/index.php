@@ -4,12 +4,12 @@
 // Listing tous les mémoires avec filtres et pagination
 ?>
 
-<?php include APP_ROOT . '/views/layouts/header.php'; ?>
+<?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
 <div class="container">
     <div class="memoire-header">
         <h1>Mémoires</h1>
-        <?php if (in_array($userRole, ['etudiant_diplome'])): ?>
+        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'etudiant_diplome'): ?>
             <a href="/memoire/soumettre" class="btn btn-primary">+ Soumettre un mémoire</a>
         <?php endif; ?>
     </div>
@@ -55,7 +55,7 @@
     </div>
 
     <!-- Pagination -->
-    <?php if ($totalPages > 1): ?>
+    <?php if (isset($totalPages) && $totalPages > 1): ?>
         <div class="pagination">
             <?php for ($i = 1; $i <= $totalPages; $i++): ?>
                 <a href="/memoire?page=<?= $i ?>" class="page-link <?= ($currentPage == $i) ? 'active' : '' ?>">
@@ -66,4 +66,4 @@
     <?php endif; ?>
 </div>
 
-<?php include APP_ROOT . '/views/layouts/footer.php'; ?>
+<?php require_once __DIR__ . '/../layouts/footer.php'; ?>
