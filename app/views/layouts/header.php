@@ -102,23 +102,23 @@
                     <a href="/gestion_memoires/public/index.php?route=<?= $dashRoute ?>">
                         <i class="fa-solid fa-gauge-high"></i> Tableau de bord
                     </a>
-                    <a href="/gestion_memoires/public/index.php?route=auth/profil">
+                    <a href="/gestion_memoires/public/index.php?route=profil">
                         <i class="fa-solid fa-user-pen"></i> Mon profil
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a href="/gestion_memoires/public/index.php?route=auth/logout" class="logout-link">
+                    <a href="/gestion_memoires/public/index.php?route=logout" class="logout-link">
                         <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
                     </a>
                 </div>
             </div>
-        <?php else: ?>
-            <a href="/gestion_memoires/public/index.php?route=auth/login" class="btn btn-outline-nav">
-                <i class="fa-solid fa-right-to-bracket"></i> Connexion
-            </a>
-            <a href="/gestion_memoires/public/index.php?route=auth/register" class="btn btn-primary-nav">
-                <i class="fa-solid fa-user-plus"></i> Inscription
-            </a>
-        <?php endif; ?>
+            <?php else: ?>
+                <a href="/gestion_memoires/public/index.php?route=login" class="btn btn-outline-nav">
+                    <i class="fa-solid fa-right-to-bracket"></i> Connexion
+                </a>
+                <a href="/gestion_memoires/public/index.php?route=register" class="btn btn-primary-nav">
+                    <i class="fa-solid fa-user-plus"></i> Inscription
+                </a>
+            <?php endif; ?>
 
         <!-- Hamburger mobile -->
         <button class="navbar-toggle" id="navbar-toggle" aria-label="Menu">
