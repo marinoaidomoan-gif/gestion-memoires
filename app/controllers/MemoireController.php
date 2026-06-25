@@ -348,13 +348,8 @@ class MemoireController extends Controller {
         return null;
     }
 
-    private function getAnneesDisponibles(): array {
-        $stmt = $this->memoire->db->query(
-            "SELECT DISTINCT annee_academique
-             FROM memoire WHERE statut = 'valide'
-             ORDER BY annee_academique DESC"
-        );
-        return $stmt->fetchAll();
+    private function getAnneesDisponibles() {
+        return $this->memoire->getAnnees();
     }
 
     private function getEtudiantsDiplomes(): array {

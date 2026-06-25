@@ -4,7 +4,7 @@ require_once __DIR__ . '/../../core/Model.php';
 
 class Commentaire extends Model {
 
-    protected string $table = 'commentaire';
+    protected $table = 'commentaire';
 
     // -------------------------------------------------------
     // findById override — PK est idCommentaire

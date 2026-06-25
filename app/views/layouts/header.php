@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- CSS Global -->
-    <link rel="stylesheet" href="/public/css/style.css">
+    <link rel="stylesheet" href="/gestion_memoires/public/css/style.css">
 
     <?php if (isset($extraCss)): ?>
         <?php foreach ($extraCss as $css): ?>
@@ -32,7 +32,7 @@
 <!-- ===================== NAVBAR PUBLIQUE ===================== -->
 <nav class="navbar" id="navbar">
     <div class="navbar-brand">
-        <a href="/public/index.php?route=memoires">
+        <a href="/gestion_memoires/public/index.php?route=memoires">
             <i class="fa-solid fa-book-open"></i>
             <span>GestMémoire</span>
         </a>
@@ -41,7 +41,7 @@
     <!-- Menu central (public) -->
     <ul class="navbar-menu" id="navbar-menu">
         <li>
-            <a href="/public/index.php?route=memoires"
+            <a href="/gestion_memoires/public/index.php?route=memoires"
                class="<?= strpos($routeActuelle, 'memoires') === 0 ? 'active' : '' ?>">
                 <i class="fa-solid fa-layer-group"></i> Mémoires
             </a>
@@ -59,7 +59,7 @@
                 $dashRoute = $dashRoutes[$role] ?? '#';
             ?>
             <li>
-                <a href="/public/index.php?route=<?= $dashRoute ?>"
+                <a href="/gestion_memoires/public/index.php?route=<?= $dashRoute ?>"
                    class="<?= strpos($routeActuelle, 'dashboard') !== false ? 'active' : '' ?>">
                     <i class="fa-solid fa-gauge-high"></i> Tableau de bord
                 </a>
@@ -67,7 +67,7 @@
 
             <?php if ($role === 'etudiant_diplome'): ?>
                 <li>
-                    <a href="/public/index.php?route=memoire/soumettre"
+                    <a href="/gestion_memoires/public/index.php?route=memoire/soumettre"
                        class="<?= $routeActuelle === 'memoire/soumettre' ? 'active' : '' ?>">
                         <i class="fa-solid fa-file-arrow-up"></i> Soumettre
                     </a>
@@ -76,7 +76,7 @@
 
             <?php if ($role === 'directeur_etudes'): ?>
                 <li>
-                    <a href="/public/index.php?route=memoire/upload"
+                    <a href="/gestion_memoires/public/index.php?route=memoire/upload"
                        class="<?= $routeActuelle === 'memoire/upload' ? 'active' : '' ?>">
                         <i class="fa-solid fa-cloud-arrow-up"></i> Archiver
                     </a>
@@ -99,23 +99,23 @@
                     <div class="dropdown-header">
                         <small><?= ucfirst(str_replace('_', ' ', $role ?? '')) ?></small>
                     </div>
-                    <a href="/public/index.php?route=<?= $dashRoute ?>">
+                    <a href="/gestion_memoires/public/index.php?route=<?= $dashRoute ?>">
                         <i class="fa-solid fa-gauge-high"></i> Tableau de bord
                     </a>
-                    <a href="/public/index.php?route=auth/profil">
+                    <a href="/gestion_memoires/public/index.php?route=auth/profil">
                         <i class="fa-solid fa-user-pen"></i> Mon profil
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a href="/public/index.php?route=auth/logout" class="logout-link">
+                    <a href="/gestion_memoires/public/index.php?route=auth/logout" class="logout-link">
                         <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
                     </a>
                 </div>
             </div>
         <?php else: ?>
-            <a href="/public/index.php?route=auth/login" class="btn btn-outline-nav">
+            <a href="/gestion_memoires/public/index.php?route=auth/login" class="btn btn-outline-nav">
                 <i class="fa-solid fa-right-to-bracket"></i> Connexion
             </a>
-            <a href="/public/index.php?route=auth/register" class="btn btn-primary-nav">
+            <a href="/gestion_memoires/public/index.php?route=auth/register" class="btn btn-primary-nav">
                 <i class="fa-solid fa-user-plus"></i> Inscription
             </a>
         <?php endif; ?>

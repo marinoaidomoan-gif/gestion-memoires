@@ -4,7 +4,7 @@ require_once __DIR__ . '/../../core/Model.php';
 
 class Memoire extends Model {
 
-    protected string $table = 'memoire';
+    protected $table = 'memoire';
 
     // Statuts possibles
     const STATUT_ATTENTE = 'en_attente';
@@ -14,7 +14,7 @@ class Memoire extends Model {
     // -------------------------------------------------------
     // findById override — PK est idMemoire (casse différente)
     // -------------------------------------------------------
-    public function findById(int $id): ?array {
+    public function findById($id) {
         $stmt = $this->db->prepare("
             SELECT m.*,
                    u.name AS nom_etudiant,
@@ -52,18 +52,18 @@ class Memoire extends Model {
     // -------------------------------------------------------
     // Mémoires validés uniquement (accès public/consulteurs)
     // -------------------------------------------------------
-    public function findValides(): array {
-        $stmt = $this->db->query("
+    public function findValides() {
+        $query = "
             SELECT m.*,
-                   u.name AS nom_etudiant,
-                   p.name AS nom_professeur
+                CONCAT(u.prenom, ' ', u.name) AS nom_etudiant,
+                CONCAT(p.prenom, ' ', p.name) AS nom_professeur
             FROM memoire m
-            LEFT JOIN users u ON u.idUser = m.idEtudiant
-            LEFT JOIN users p ON p.idUser = m.idProfesseur
+            LEFT JOIN users u ON u.id_user = m.idEtudiant
+            LEFT JOIN users p ON p.id_user = m.idProfesseur
             WHERE m.statut = 'valide'
             ORDER BY m.date_soumission DESC
-        ");
-        return $stmt->fetchAll();
+        ";
+        return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // -------------------------------------------------------
@@ -176,5 +176,10 @@ class Memoire extends Model {
             $result[$row['statut']] = (int) $row['total'];
         }
         return $result;
+    }
+
+    public function getAnnees() {
+        $query = "SELECT DISTINCT YEAR(date_soumission) AS annee FROM memoire WHERE date_soumission IS NOT NULL ORDER BY annee DESC";
+        return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
 }

@@ -3,10 +3,10 @@
 abstract class Model {
 
     // Connexion PDO partagée par tous les models
-    protected PDO $db;
+    protected $db;
 
     // Nom de la table (défini dans chaque model enfant)
-    protected string $table;
+    protected $table;
 
     // -------------------------------------------------------
     // Constructeur — récupère la connexion
@@ -18,7 +18,7 @@ abstract class Model {
     // -------------------------------------------------------
     // Trouver un enregistrement par son id
     // -------------------------------------------------------
-    public function findById(int $id): ?array {
+    public function findById($id) {
         $stmt = $this->db->prepare(
             "SELECT * FROM {$this->table} WHERE id{$this->table} = ?"
         );
@@ -30,17 +30,16 @@ abstract class Model {
     // -------------------------------------------------------
     // Récupérer tous les enregistrements
     // -------------------------------------------------------
-    public function findAll(): array {
+    public function findAll() {
         $stmt = $this->db->query("SELECT * FROM {$this->table}");
         return $stmt->fetchAll();
     }
 
     // -------------------------------------------------------
     // Insérer un enregistrement
-    // Paramètre : tableau associatif [colonne => valeur]
     // -------------------------------------------------------
-    public function insert(array $data): int {
-        $colonnes    = implode(', ', array_keys($data));
+    public function insert($data) {
+        $colonnes     = implode(', ', array_keys($data));
         $placeholders = implode(', ', array_fill(0, count($data), '?'));
 
         $stmt = $this->db->prepare(
@@ -54,22 +53,25 @@ abstract class Model {
     // -------------------------------------------------------
     // Mettre à jour un enregistrement par son id
     // -------------------------------------------------------
-    public function update(int $id, array $data): bool {
-        $set = implode(', ', array_map(
-            fn($col) => "{$col} = ?",
-            array_keys($data)
-        ));
+    public function update($id, $data) {
+        $keys = array_keys($data);
+        $set  = implode(', ', array_map(function($col) {
+            return "{$col} = ?";
+        }, $keys));
+
+        $values   = array_values($data);
+        $values[] = $id;
 
         $stmt = $this->db->prepare(
             "UPDATE {$this->table} SET {$set} WHERE id{$this->table} = ?"
         );
-        return $stmt->execute([...array_values($data), $id]);
+        return $stmt->execute($values);
     }
 
     // -------------------------------------------------------
     // Supprimer un enregistrement par son id
     // -------------------------------------------------------
-    public function delete(int $id): bool {
+    public function delete($id) {
         $stmt = $this->db->prepare(
             "DELETE FROM {$this->table} WHERE id{$this->table} = ?"
         );
@@ -78,13 +80,12 @@ abstract class Model {
 
     // -------------------------------------------------------
     // Trouver avec conditions personnalisées
-    // Exemple : findWhere(['statut' => 'en_attente'])
     // -------------------------------------------------------
-    public function findWhere(array $conditions): array {
-        $where = implode(' AND ', array_map(
-            fn($col) => "{$col} = ?",
-            array_keys($conditions)
-        ));
+    public function findWhere($conditions) {
+        $keys  = array_keys($conditions);
+        $where = implode(' AND ', array_map(function($col) {
+            return "{$col} = ?";
+        }, $keys));
 
         $stmt = $this->db->prepare(
             "SELECT * FROM {$this->table} WHERE {$where}"
@@ -96,16 +97,17 @@ abstract class Model {
     // -------------------------------------------------------
     // Compter les enregistrements
     // -------------------------------------------------------
-    public function count(array $conditions = []): int {
+    public function count($conditions = []) {
         if (empty($conditions)) {
             $stmt = $this->db->query(
                 "SELECT COUNT(*) FROM {$this->table}"
             );
         } else {
-            $where = implode(' AND ', array_map(
-                fn($col) => "{$col} = ?",
-                array_keys($conditions)
-            ));
+            $keys  = array_keys($conditions);
+            $where = implode(' AND ', array_map(function($col) {
+                return "{$col} = ?";
+            }, $keys));
+
             $stmt = $this->db->prepare(
                 "SELECT COUNT(*) FROM {$this->table} WHERE {$where}"
             );

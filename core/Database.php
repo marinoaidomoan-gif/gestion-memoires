@@ -3,10 +3,10 @@
 class Database {
 
     // Instance unique (pattern Singleton)
-    private static ?Database $instance = null;
+    private static $instance = null;
 
     // Connexion PDO
-    private PDO $pdo;
+    private $pdo;
 
     // -------------------------------------------------------
     // Constructeur privé — connexion à MySQL

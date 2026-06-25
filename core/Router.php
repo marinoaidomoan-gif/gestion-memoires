@@ -3,7 +3,7 @@
 class Router {
 
     // Table des routes : 'route' => ['Controller', 'methode']
-    private array $routes = [];
+    private $routes = [];
 
     // -------------------------------------------------------
     // Enregistrer une route

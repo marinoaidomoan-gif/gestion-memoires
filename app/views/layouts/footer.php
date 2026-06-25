@@ -24,15 +24,15 @@ $estConnecte = isset($_SESSION['idUser']);
             &copy; <?= date('Y') ?> UATM/GASA Formation &mdash; Tous droits réservés.
         </p>
         <div class="footer-links">
-            <a href="/public/index.php?route=memoires">
+            <a href="/gestion_memoires/public/index.php?route=memoires">
                 <i class="fa-solid fa-layer-group"></i> Mémoires
             </a>
             <?php if ($estConnecte): ?>
-                <a href="/public/index.php?route=auth/logout">
+                <a href="/gestion_memoires/public/index.php?route=auth/logout">
                     <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
                 </a>
             <?php else: ?>
-                <a href="/public/index.php?route=auth/login">
+                <a href="/gestion_memoires/public/index.php?route=auth/login">
                     <i class="fa-solid fa-right-to-bracket"></i> Connexion
                 </a>
             <?php endif; ?>
