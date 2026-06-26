@@ -90,7 +90,7 @@ class AuthController extends Controller {
                             }
                             $success = "Compte créé avec succès. Vous pouvez vous connecter.";
                         } catch (Exception $e) {
-                            $error = "Une erreur est survenue. Veuillez réessayer.";
+                            $error = "Erreur système : " . $e->getMessage();
                         }
                     }
                 }
@@ -108,7 +108,7 @@ class AuthController extends Controller {
     // -------------------------------------------------------
     public function logout(): void {
         $this->user->seDeconnecter();
-        $this->redirect('/public/index.php?route=login');
+        $this->redirect('/gestion_memoires/public/index.php?route=login');
     }
 
     // -------------------------------------------------------
@@ -125,7 +125,7 @@ class AuthController extends Controller {
         ];
 
         $route = $routes[$role] ?? 'accueil';
-        $this->redirect('/public/index.php?route=' . $route);
+        $this->redirect('/gestion_memoires/public/index.php?route=' . $route);
     }
 
     // -------------------------------------------------------

@@ -955,3 +955,31 @@ body:not(.is-authenticated) .site-footer { margin-left: 0; }
 
 /* ── Sélection texte ────────────────────────────────────────── */
 ::selection { background: var(--accent); color: var(--bg-main); }
+
+/* ── Modification admin ────────────────────────────────────────── */
+/* Configuration pour coller le footer en bas de l'écran */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body.is-public {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Le contenu principal prend tout l'espace disponible et pousse le footer */
+body.is-public .main-public {
+    flex: 1 0 auto;
+    width: 100% !important;
+    box-sizing: border-box;
+}
+
+/* Le footer reste cloué en bas sans jamais remonter */
+body.is-public .site-footer {
+    flex-shrink: 0;
+    width: 100% !important;
+    margin-top: auto; /* Force le positionnement tout en bas */
+}

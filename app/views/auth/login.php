@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="form-actions mt-1">
-                    <button type="submit" class="btn btn-primary">Se connecter</button>
+                    <button type="submit" name="submit" class="btn btn-primary">Se connecter</button>
                 </div>
             </form>
         </div>

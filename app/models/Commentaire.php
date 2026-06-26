@@ -9,11 +9,11 @@ class Commentaire extends Model {
     // -------------------------------------------------------
     // findById override — PK est idCommentaire
     // -------------------------------------------------------
-    public function findById(int $id): ?array {
+    public function findById($id) {
         $stmt = $this->db->prepare("
             SELECT c.*, u.name AS nom_auteur, u.role AS role_auteur
             FROM commentaire c
-            LEFT JOIN users u ON u.idUser = c.idUser
+            LEFT JOIN users u ON u.id_user = c.idUser
             WHERE c.idCommentaire = ?
         ");
         $stmt->execute([$id]);

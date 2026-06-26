@@ -4,7 +4,7 @@ require_once __DIR__ . '/../../core/Model.php';
 
 class Like extends Model {
 
-    protected string $table = 'likes';
+    protected $table = 'like';
 
     // -------------------------------------------------------
     // Liker un mémoire (toggle : like/unlike)
