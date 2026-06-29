@@ -92,6 +92,9 @@ class MemoireController extends Controller {
         $error   = null;
         $success = null;
 
+        // Récupérer la liste des professeurs pour le select
+        $professeurs = $this->memoire->getProfesseurs();
+
         if ($this->isPost()) {
             $data = [
                 'titre'            => $this->post('titre'),
@@ -99,16 +102,21 @@ class MemoireController extends Controller {
                 'nbPages'          => $this->post('nbPages') ?: null,
                 'centre'           => $this->post('centre') ?: null,
                 'annee_academique' => $this->post('annee_academique'),
+                'idProfesseur'     => (int) $this->post('idProfesseur'),
             ];
 
             $error = $this->validerSoumission($data);
+
+            if (!$error && empty($data['idProfesseur'])) {
+                $error = "Veuillez choisir un professeur encadrant.";
+            }
 
             if (!$error && empty($_FILES['fichier']['name'])) {
                 $error = "Le fichier du mémoire est obligatoire.";
             }
 
             if (!$error) {
-                $etudiant = new EtudiantDiplome();
+                $etudiant  = new EtudiantDiplome();
                 $idMemoire = $etudiant->soumettreMemoire($data, $_FILES['fichier']);
 
                 if ($idMemoire) {
@@ -120,11 +128,11 @@ class MemoireController extends Controller {
         }
 
         $this->render('memoire/soumettre', [
-            'error'   => $error,
-            'success' => $success,
+            'error'       => $error,
+            'success'     => $success,
+            'professeurs' => $professeurs,
         ]);
     }
-
     // -------------------------------------------------------
     // GET  /index.php?route=memoire/modifier&id=X
     // POST /index.php?route=memoire/modifier&id=X
@@ -360,5 +368,10 @@ class MemoireController extends Controller {
              ORDER BY u.name ASC"
         );
         return $stmt->fetchAll();
+    }
+
+    public function getProfesseurs(): array {
+        $query = "SELECT id_user, name, prenom FROM users WHERE role = 'professeur' ORDER BY name ASC";
+        return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
 }

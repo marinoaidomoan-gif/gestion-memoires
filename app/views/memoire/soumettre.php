@@ -1,106 +1,95 @@
-<?php
-// app/views/memoire/soumettre.php
-// Route: GET/POST /memoire/soumettre
-// Formulaire création nouveau mémoire (Étudiant Diplômé)
-?>
-
 <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
 <div class="container">
     <div class="form-wrapper">
-        <h1>Soumettre un nouveau mémoire</h1>
+        <h1><i class="fa-solid fa-file-arrow-up"></i> Soumettre un nouveau mémoire</h1>
+        <p class="text-muted mb-2">Déposez votre document de fin de cycle dans le catalogue de l'institut.</p>
 
-        <?php if (!empty($errors)): ?>
+        <?php if (!empty($error)): ?>
             <div class="alert alert-danger">
-                <strong>Erreurs :</strong>
-                <ul>
-                    <?php foreach ($errors as $error): ?>
-                        <li><?= htmlspecialchars($error) ?></li>
-                    <?php endforeach; ?>
-                </ul>
+                <strong><i class="fa-solid fa-circle-exclamation"></i> Erreur :</strong> <?= htmlspecialchars($error) ?>
             </div>
         <?php endif; ?>
 
-        <form method="POST" action="/memoire/soumettre" enctype="multipart/form-data" class="memoire-form">
+        <?php if (!empty($success)): ?>
+            <div class="alert alert-success">
+                <strong><i class="fa-solid fa-circle-check"></i> Succès :</strong> <?= htmlspecialchars($success) ?>
+            </div>
+        <?php endif; ?>
+
+        <form method="POST" action="/gestion_memoires/public/index.php?route=memoire/soumettre" enctype="multipart/form-data" class="memoire-form">
             
             <!-- Titre -->
             <div class="form-group">
                 <label for="titre">Titre du mémoire *</label>
-                <input type="text" 
-                       id="titre" 
-                       name="titre" 
-                       maxlength="255" 
-                       required 
+                <input type="text" id="titre" name="titre" maxlength="255" required 
                        value="<?= htmlspecialchars($_POST['titre'] ?? '') ?>"
-                       placeholder="Ex: Analyse des systèmes de gestion...">
-                <small>255 caractères max</small>
+                       placeholder="Ex: Analyse et sécurisation des architectures cloud...">
             </div>
 
-            <!-- Description courte -->
-            <div class="form-group">
-                <label for="description">Résumé *</label>
-                <textarea id="description" 
-                          name="description" 
-                          rows="4" 
-                          maxlength="500" 
-                          required
-                          placeholder="Résumé court du contenu..."><?= htmlspecialchars($_POST['description'] ?? '') ?></textarea>
-                <small>500 caractères max</small>
-            </div>
-
-            <!-- Contenu principal -->
-            <div class="form-group">
-                <label for="contenu">Contenu du mémoire *</label>
-                <textarea id="contenu" 
-                          name="contenu" 
-                          rows="15" 
-                          required
-                          placeholder="Entrez le contenu complet..."><?= htmlspecialchars($_POST['contenu'] ?? '') ?></textarea>
-                <small>Pas de limite de caractères</small>
-            </div>
-
-            <!-- Catégorie -->
-            <div class="form-group">
-                <label for="categorie">Domaine/Catégorie *</label>
-                <select id="categorie" name="categorie" required>
-                    <option value="">-- Sélectionnez --</option>
-                    <option value="informatique" <?= ($_POST['categorie'] ?? '') === 'informatique' ? 'selected' : '' ?>>Informatique</option>
-                    <option value="systemes" <?= ($_POST['categorie'] ?? '') === 'systemes' ? 'selected' : '' ?>>Systèmes & Réseaux</option>
-                    <option value="logiciels" <?= ($_POST['categorie'] ?? '') === 'logiciels' ? 'selected' : '' ?>>Logiciels</option>
-                    <option value="autre" <?= ($_POST['categorie'] ?? '') === 'autre' ? 'selected' : '' ?>>Autre</option>
+            <!-- Thème (Axe de recherche) -->
+            <div class="form-group mt-1">
+                <label for="theme">Thème / Filière *</label>
+                <select id="theme" name="theme" required>
+                    <option value="">-- Sélectionnez l'axe de recherche --</option>
+                    <option value="Informatique" <?= ($_POST['theme'] ?? '') === 'Informatique' ? 'selected' : '' ?>>Systèmes Informatiques et Logiciels (SIL)</option>
+                    <option value="Réseaux" <?= ($_POST['theme'] ?? '') === 'Réseaux' ? 'selected' : '' ?>>Réseaux et Télécommunications (RIT)</option>
+                    <option value="Sécurité" <?= ($_POST['theme'] ?? '') === 'Sécurité' ? 'selected' : '' ?>>Sécurité Informatique</option>
                 </select>
             </div>
 
-            <!-- Mots-clés -->
-            <div class="form-group">
-                <label for="mots_cles">Mots-clés (séparés par virgule)</label>
-                <input type="text" 
-                       id="mots_cles" 
-                       name="mots_cles" 
-                       placeholder="Ex: PHP, MVC, Gestion..."
-                       value="<?= htmlspecialchars($_POST['mots_cles'] ?? '') ?>">
+            <!-- Professeur Encadrant (Nouveau champ dynamique Option B) -->
+            <div class="form-group mt-1">
+                <label for="idProfesseur">Professeur encadrant / Superviseur *</label>
+                <select id="idProfesseur" name="idProfesseur" required>
+                    <option value="">-- Sélectionnez votre enseignant --</option>
+                    <?php if (!empty($professeurs)): ?>
+                        <?php foreach ($professeurs as $prof): ?>
+                            <option value="<?= $prof['id_user'] ?>" <?= ($_POST['idProfesseur'] ?? '') == $prof['id_user'] ? 'selected' : '' ?>>
+                                M./Mme <?= htmlspecialchars($prof['prenom'] . ' ' . $prof['name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
             </div>
 
-            <!-- Upload fichier -->
-            <div class="form-group">
-                <label for="fichier">Fichier (PDF, DOC, DOCX) - 10MB max</label>
-                <input type="file" 
-                       id="fichier" 
-                       name="fichier" 
-                       accept=".pdf,.doc,.docx,.txt"
-                       onchange="validateFile(this)">
-                <small>Formats acceptés : PDF, Word, Texte</small>
+            <!-- Nombre de pages -->
+            <div class="form-group mt-1">
+                <label for="nbPages">Nombre de pages</label>
+                <input type="number" id="nbPages" name="nbPages" min="1"
+                       value="<?= htmlspecialchars($_POST['nbPages'] ?? '') ?>"
+                       placeholder="Ex: 45">
             </div>
 
-            <!-- Boutons -->
-            <div class="form-actions">
-                <button type="submit" name="action" value="brouillon" class="btn btn-secondary">
-                    💾 Sauvegarder en brouillon
-                </button>
+            <!-- Centre d'examen / Institut -->
+            <div class="form-group mt-1">
+                <label for="centre">Institut / Centre d'évaluation *</label>
+                <input type="text" id="centre" name="centre" required
+                       value="<?= htmlspecialchars($_POST['centre'] ?? 'UATM / GASA Formation') ?>">
+            </div>
+
+            <!-- Année académique -->
+            <div class="form-group mt-1">
+                <label for="annee_academique">Année académique *</label>
+                <input type="text" id="annee_academique" name="annee_academique" required 
+                       value="<?= htmlspecialchars($_POST['annee_academique'] ?? '') ?>"
+                       placeholder="Ex: 2025-2026">
+            </div>
+
+            <!-- Upload fichier PDF -->
+            <div class="form-group mt-1">
+                <label for="fichier">Fichier du mémoire (PDF uniquement) *</label>
+                <input type="file" id="fichier" name="fichier" accept=".pdf" required onchange="validateFile(this)">
+                <small>Format exigé : PDF (10 Mo maximum)</small>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="form-actions mt-2">
+                <!-- Rétablissement du bouton d'origine du contrôleur -->
                 <button type="submit" name="action" value="soumis" class="btn btn-primary">
-                    ✅ Soumettre
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Soumettre le mémoire
                 </button>
-                <a href="/memoire" class="btn btn-outline">Annuler</a>
+                <a href="/gestion_memoires/public/index.php?route=memoires" class="btn btn-outline">Annuler</a>
             </div>
         </form>
     </div>
@@ -110,17 +99,14 @@
 function validateFile(input) {
     const file = input.files[0];
     if (file) {
-        const maxSize = 10 * 1024 * 1024; // 10MB
+        const maxSize = 10 * 1024 * 1024;
         if (file.size > maxSize) {
-            alert('Le fichier dépasse 10MB');
+            alert("Le fichier dépasse la limite de 10 Mo autorisée.");
             input.value = '';
             return false;
         }
-        const validTypes = ['application/pdf', 'application/msword', 
-                           'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                           'text/plain'];
-        if (!validTypes.includes(file.type)) {
-            alert('Type de fichier non autorisé');
+        if (file.type !== 'application/pdf') {
+            alert("Seuls les documents au format PDF sont acceptés par l'institut.");
             input.value = '';
             return false;
         }

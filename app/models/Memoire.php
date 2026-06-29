@@ -182,4 +182,11 @@ class Memoire extends Model {
         $query = "SELECT DISTINCT YEAR(date_soumission) AS annee FROM memoire WHERE date_soumission IS NOT NULL ORDER BY annee DESC";
         return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // Méthode requise par le contrôleur pour charger la liste des enseignants
+    public function getProfesseurs(): array {
+        $query = "SELECT id_user, name, prenom FROM users WHERE role = 'professeur' ORDER BY name ASC";
+        return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }

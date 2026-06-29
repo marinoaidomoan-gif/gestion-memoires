@@ -30,26 +30,30 @@ class EtudiantDiplome extends User {
     // Soumettre un mémoire avec upload de fichier
     // -------------------------------------------------------
     public function soumettreMemoire(array $data, array $fichier): int|false {
-        $extensionsAutorisees = ['pdf', 'doc', 'docx'];
+        $extensionsAutorisees = ['pdf'];
         $extension = strtolower(pathinfo($fichier['name'], PATHINFO_EXTENSION));
 
         if (!in_array($extension, $extensionsAutorisees)) {
             return false;
         }
 
-        $nomFichier  = $_SESSION['idUser'] . '_' . time() . '.' . $extension;
+        // Récupération globale de la session utilisateur
+        $idConnecte = $_SESSION['user']['id'] ?? null;
+        $nomFichier  = $idConnecte . '_' . time() . '.' . $extension;
         $destination = __DIR__ . '/../../public/uploads/' . $nomFichier;
 
         if (!move_uploaded_file($fichier['tmp_name'], $destination)) {
             return false;
         }
 
+        // Requête SQL alignée sur ta structure phpMyAdmin
         $stmt = $this->db->prepare(
             "INSERT INTO memoire
                 (titre, theme, nbPages, centre, date_soumission,
-                 annee_academique, statut, fichier, idEtudiant)
-             VALUES (?, ?, ?, ?, CURDATE(), ?, 'en_attente', ?, ?)"
+                annee_academique, statut, fichier, idEtudiant, idProfesseur)
+            VALUES (?, ?, ?, ?, CURDATE(), ?, 'en_attente', ?, ?, ?)"
         );
+        
         $stmt->execute([
             $data['titre'],
             $data['theme'],
@@ -57,7 +61,8 @@ class EtudiantDiplome extends User {
             $data['centre']          ?? null,
             $data['annee_academique'],
             $nomFichier,
-            $_SESSION['idUser'],
+            $idConnecte,
+            $data['idProfesseur']    ?? null,
         ]);
 
         return (int) $this->db->lastInsertId();
@@ -67,6 +72,7 @@ class EtudiantDiplome extends User {
     // Récupérer les mémoires de l'étudiant connecté
     // -------------------------------------------------------
     public function getMesMemoires(): array {
+        $idConnecte = $_SESSION['user']['id'] ?? null;
         $stmt = $this->db->prepare(
             "SELECT m.*, u.name AS nom_professeur
              FROM memoire m
@@ -74,19 +80,21 @@ class EtudiantDiplome extends User {
              WHERE m.idEtudiant = ?
              ORDER BY m.date_soumission DESC"
         );
-        $stmt->execute([$_SESSION['idUser']]);
-        return $stmt->fetchAll();
+        $stmt->execute([$idConnecte]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // -------------------------------------------------------
     // Modifier un mémoire (seulement si en_attente)
     // -------------------------------------------------------
     public function modifierMemoire(int $idMemoire, array $data, ?array $fichier = null): bool {
+        $idConnecte = $_SESSION['user']['id'] ?? null;
+        
         $stmt = $this->db->prepare(
             "SELECT * FROM memoire
              WHERE idMemoire = ? AND idEtudiant = ? AND statut = 'en_attente'"
         );
-        $stmt->execute([$idMemoire, $_SESSION['idUser']]);
+        $stmt->execute([$idMemoire, $idConnecte]);
         $memoire = $stmt->fetch();
 
         if (!$memoire) return false;
@@ -94,11 +102,11 @@ class EtudiantDiplome extends User {
         $nomFichier = $memoire['fichier'];
 
         if ($fichier && $fichier['error'] === 0) {
-            $extensionsAutorisees = ['pdf', 'doc', 'docx'];
+            $extensionsAutorisees = ['pdf'];
             $extension = strtolower(pathinfo($fichier['name'], PATHINFO_EXTENSION));
-            if (!in_array($extension, $extensionsAutorisees)) return false;
+            if (!in_array($extensionsAutorisees, $extension)) return false;
 
-            $nomFichier  = $_SESSION['idUser'] . '_' . time() . '.' . $extension;
+            $nomFichier  = $idConnecte . '_' . time() . '.' . $extension;
             $destination = __DIR__ . '/../../public/uploads/' . $nomFichier;
             if (!move_uploaded_file($fichier['tmp_name'], $destination)) return false;
         }
