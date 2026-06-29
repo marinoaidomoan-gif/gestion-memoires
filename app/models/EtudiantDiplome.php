@@ -70,7 +70,7 @@ class EtudiantDiplome extends User {
         $stmt = $this->db->prepare(
             "SELECT m.*, u.name AS nom_professeur
              FROM memoire m
-             LEFT JOIN users u ON m.idProfesseur = u.idUser
+             LEFT JOIN users u ON m.idProfesseur = u.id_user
              WHERE m.idEtudiant = ?
              ORDER BY m.date_soumission DESC"
         );
@@ -126,12 +126,12 @@ class EtudiantDiplome extends User {
     public function getMonProfil(): ?array {
         $stmt = $this->db->prepare(
             "SELECT u.*, ed.niveau, ed.filiere, ed.annee_diplome
-             FROM users u
-             JOIN etudiantdiplome ed ON u.idUser = ed.idUser
-             WHERE u.idUser = ?"
+            FROM users u
+            JOIN etudiantdiplome ed ON u.id_user = ed.idUser
+            WHERE u.id_user = ?"
         );
-        $stmt->execute([$_SESSION['idUser']]);
-        $result = $stmt->fetch();
-        return $result ?: null;
+        $stmt->execute([$_SESSION['user']['id'] ?? null]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result : null;
     }
 }

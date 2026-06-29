@@ -10,13 +10,13 @@
     <div class="memoire-header">
         <h1>Mémoires</h1>
         <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'etudiant_diplome'): ?>
-            <a href="/memoire/soumettre" class="btn btn-primary">+ Soumettre un mémoire</a>
+            <a href="/gestion_memoires/public/index.php?route=memoire/soumettre" class="btn btn-primary">+ Soumettre un mémoire</a>
         <?php endif; ?>
     </div>
 
     <!-- Filtres -->
     <div class="filters">
-        <form method="GET" action="/memoire">
+        <form method="GET" action="/gestion_memoires/public/index.php">
             <input type="text" name="search" placeholder="Rechercher..." value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
             <select name="statut">
                 <option value="">Tous les statuts</option>
@@ -41,10 +41,10 @@
                     <p class="card-description"><?= htmlspecialchars(substr($memoire['description'], 0, 150)) ?>...</p>
                     <div class="card-footer">
                         <small>Par <strong><?= htmlspecialchars($memoire['auteur_nom']) ?></strong> • <?= date('d/m/Y', strtotime($memoire['date_creation'])) ?></small>
-                        <a href="/memoire/detail/<?= $memoire['id'] ?>" class="btn btn-small">Voir</a>
+                        <a href="/gestion_memoires/public/index.php?route=memoire/detail&id=<?= $memoire['idMemoire'] ?>" class="btn btn-small">Voir</a>
                         
                         <?php if ($userId == $memoire['user_id'] && $userRole === 'etudiant_diplome'): ?>
-                            <a href="/memoire/modifier/<?= $memoire['id'] ?>" class="btn btn-small btn-outline">Modifier</a>
+                            <a href="/gestion_memoires/public/index.php?route=memoire/modifier&id=<?= $memoire['idMemoire'] ?>" class="btn btn-small btn-outline">Modifier</a>
                         <?php endif; ?>
                     </div>
                 </div>

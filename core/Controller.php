@@ -89,7 +89,7 @@ abstract class Controller {
     // -------------------------------------------------------
     protected function requiertConnexion(): void {
         if (!$this->estConnecte()) {
-            $this->redirect('/public/index.php?route=login');
+            $this->redirect('/gestion_memoires/public/index.php?route=login');
         }
     }
 

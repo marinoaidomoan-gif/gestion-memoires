@@ -43,7 +43,7 @@ function sidebarActive($route, $current) {
         <!-- ===== LIENS COMMUNS A TOUS ===== -->
         <p class="sidebar-section-label">Navigation</p>
 
-        <a href="/public/index.php?route=memoires"
+        <a href="/gestion_memoires/public/index.php?route=memoires"
            class="sidebar-link <?= sidebarActive('memoires', $routeActuelle) ?>">
             <i class="fa-solid fa-layer-group"></i>
             <span>Tous les mémoires</span>
@@ -52,7 +52,7 @@ function sidebarActive($route, $current) {
         <!-- ===== ETUDIANT DIPLOME ===== -->
         <?php if ($role === 'etudiant_diplome'): ?>
 
-            <a href="/public/index.php?route=etudiant/dashboard"
+            <a href="/gestion_memoires/public/index.php?route=etudiant/dashboard"
                class="sidebar-link <?= sidebarActive('etudiant/dashboard', $routeActuelle) ?>">
                 <i class="fa-solid fa-gauge-high"></i>
                 <span>Tableau de bord</span>
@@ -61,19 +61,19 @@ function sidebarActive($route, $current) {
             <div class="sidebar-divider"></div>
             <p class="sidebar-section-label">Mes mémoires</p>
 
-            <a href="/public/index.php?route=memoire/soumettre"
+            <a href="/gestion_memoires/public/index.php?route=memoire/soumettre"
                class="sidebar-link <?= sidebarActive('memoire/soumettre', $routeActuelle) ?>">
                 <i class="fa-solid fa-file-arrow-up"></i>
                 <span>Soumettre un mémoire</span>
             </a>
 
-            <a href="/public/index.php?route=etudiant/mes-memoires"
+            <a href="/gestion_memoires/public/index.php?route=etudiant/mes-memoires"
                class="sidebar-link <?= sidebarActive('etudiant/mes-memoires', $routeActuelle) ?>">
                 <i class="fa-solid fa-folder-open"></i>
                 <span>Mes soumissions</span>
             </a>
 
-            <a href="/public/index.php?route=etudiant/commentaires"
+            <a href="/gestion_memoires/public/index.php?route=etudiant/commentaires"
                class="sidebar-link <?= sidebarActive('etudiant/commentaires', $routeActuelle) ?>">
                 <i class="fa-solid fa-comments"></i>
                 <span>Mes commentaires</span>
@@ -84,7 +84,7 @@ function sidebarActive($route, $current) {
         <!-- ===== ETUDIANT CONSULTEUR ===== -->
         <?php if ($role === 'etudiant_consulteur'): ?>
 
-            <a href="/public/index.php?route=etudiant/dashboard"
+            <a href="/gestion_memoires/public/index.php?route=etudiant/dashboard"
                class="sidebar-link <?= sidebarActive('etudiant/dashboard', $routeActuelle) ?>">
                 <i class="fa-solid fa-gauge-high"></i>
                 <span>Tableau de bord</span>
@@ -93,13 +93,13 @@ function sidebarActive($route, $current) {
             <div class="sidebar-divider"></div>
             <p class="sidebar-section-label">Activité</p>
 
-            <a href="/public/index.php?route=etudiant/commentaires"
+            <a href="/gestion_memoires/public/index.php?route=etudiant/commentaires"
                class="sidebar-link <?= sidebarActive('etudiant/commentaires', $routeActuelle) ?>">
                 <i class="fa-solid fa-comments"></i>
                 <span>Mes commentaires</span>
             </a>
 
-            <a href="/public/index.php?route=etudiant/likes"
+            <a href="/gestion_memoires/public/index.php?route=etudiant/likes"
                class="sidebar-link <?= sidebarActive('etudiant/likes', $routeActuelle) ?>">
                 <i class="fa-solid fa-heart"></i>
                 <span>Mes likes</span>
@@ -110,7 +110,7 @@ function sidebarActive($route, $current) {
         <!-- ===== PROFESSEUR ===== -->
         <?php if ($role === 'professeur'): ?>
 
-            <a href="/public/index.php?route=professeur/dashboard"
+            <a href="/gestion_memoires/public/index.php?route=professeur/dashboard"
                class="sidebar-link <?= sidebarActive('professeur/dashboard', $routeActuelle) ?>">
                 <i class="fa-solid fa-gauge-high"></i>
                 <span>Tableau de bord</span>
@@ -119,19 +119,19 @@ function sidebarActive($route, $current) {
             <div class="sidebar-divider"></div>
             <p class="sidebar-section-label">Encadrement</p>
 
-            <a href="/public/index.php?route=professeur/mes-etudiants"
+            <a href="/gestion_memoires/public/index.php?route=professeur/mes-etudiants"
                class="sidebar-link <?= sidebarActive('professeur/mes-etudiants', $routeActuelle) ?>">
                 <i class="fa-solid fa-user-graduate"></i>
                 <span>Mes étudiants</span>
             </a>
 
-            <a href="/public/index.php?route=professeur/en-attente"
+            <a href="/gestion_memoires/public/index.php?route=professeur/en-attente"
                class="sidebar-link <?= sidebarActive('professeur/en-attente', $routeActuelle) ?>">
                 <i class="fa-solid fa-clock"></i>
                 <span>Mémoires à évaluer</span>
             </a>
 
-            <a href="/public/index.php?route=professeur/evalues"
+            <a href="/gestion_memoires/public/index.php?route=professeur/evalues"
                class="sidebar-link <?= sidebarActive('professeur/evalues', $routeActuelle) ?>">
                 <i class="fa-solid fa-clipboard-check"></i>
                 <span>Mémoires évalués</span>
@@ -140,7 +140,7 @@ function sidebarActive($route, $current) {
             <div class="sidebar-divider"></div>
             <p class="sidebar-section-label">Activité</p>
 
-            <a href="/public/index.php?route=professeur/commentaires"
+            <a href="/gestion_memoires/public/index.php?route=professeur/commentaires"
                class="sidebar-link <?= sidebarActive('professeur/commentaires', $routeActuelle) ?>">
                 <i class="fa-solid fa-comments"></i>
                 <span>Mes commentaires</span>
@@ -151,7 +151,7 @@ function sidebarActive($route, $current) {
         <!-- ===== DIRECTEUR DES ETUDES ===== -->
         <?php if ($role === 'directeur_etudes'): ?>
 
-            <a href="/public/index.php?route=admin/dashboard"
+            <a href="/gestion_memoires/public/index.php?route=admin/dashboard"
                class="sidebar-link <?= sidebarActive('admin/dashboard', $routeActuelle) ?>">
                 <i class="fa-solid fa-gauge-high"></i>
                 <span>Tableau de bord</span>
@@ -160,25 +160,25 @@ function sidebarActive($route, $current) {
             <div class="sidebar-divider"></div>
             <p class="sidebar-section-label">Gestion mémoires</p>
 
-            <a href="/public/index.php?route=admin/en-attente"
+            <a href="/gestion_memoires/public/index.php?route=admin/en-attente"
                class="sidebar-link <?= sidebarActive('admin/en-attente', $routeActuelle) ?>">
                 <i class="fa-solid fa-clock"></i>
                 <span>En attente</span>
             </a>
 
-            <a href="/public/index.php?route=admin/valides"
+            <a href="/gestion_memoires/public/index.php?route=admin/valides"
                class="sidebar-link <?= sidebarActive('admin/valides', $routeActuelle) ?>">
                 <i class="fa-solid fa-circle-check"></i>
                 <span>Validés</span>
             </a>
 
-            <a href="/public/index.php?route=admin/rejetes"
+            <a href="/gestion_memoires/public/index.php?route=admin/rejetes"
                class="sidebar-link <?= sidebarActive('admin/rejetes', $routeActuelle) ?>">
                 <i class="fa-solid fa-circle-xmark"></i>
                 <span>Rejetés</span>
             </a>
 
-            <a href="/public/index.php?route=memoire/upload"
+            <a href="/gestion_memoires/public/index.php?route=memoire/upload"
                class="sidebar-link <?= sidebarActive('memoire/upload', $routeActuelle) ?>">
                 <i class="fa-solid fa-cloud-arrow-up"></i>
                 <span>Archiver un mémoire</span>
@@ -187,19 +187,19 @@ function sidebarActive($route, $current) {
             <div class="sidebar-divider"></div>
             <p class="sidebar-section-label">Administration</p>
 
-            <a href="/public/index.php?route=admin/utilisateurs"
+            <a href="/gestion_memoires/public/index.php?route=admin/utilisateurs"
                class="sidebar-link <?= sidebarActive('admin/utilisateurs', $routeActuelle) ?>">
                 <i class="fa-solid fa-users"></i>
                 <span>Utilisateurs</span>
             </a>
 
-            <a href="/public/index.php?route=admin/professeurs"
+            <a href="/gestion_memoires/public/index.php?route=admin/professeurs"
                class="sidebar-link <?= sidebarActive('admin/professeurs', $routeActuelle) ?>">
                 <i class="fa-solid fa-chalkboard-user"></i>
                 <span>Professeurs</span>
             </a>
 
-            <a href="/public/index.php?route=admin/statistiques"
+            <a href="/gestion_memoires/public/index.php?route=admin/statistiques"
                class="sidebar-link <?= sidebarActive('admin/statistiques', $routeActuelle) ?>">
                 <i class="fa-solid fa-chart-bar"></i>
                 <span>Statistiques</span>
@@ -213,11 +213,11 @@ function sidebarActive($route, $current) {
 
     <!-- Bas de sidebar : déconnexion -->
     <div class="sidebar-footer">
-        <a href="/public/index.php?route=auth/profil" class="sidebar-link">
+        <a href="/gestion_memoires/public/index.php?route=auth/profil" class="sidebar-link">
             <i class="fa-solid fa-user-pen"></i>
             <span>Mon profil</span>
         </a>
-        <a href="/public/index.php?route=auth/logout" class="sidebar-link sidebar-logout">
+        <a href="/gestion_memoires/public/index.php?route=logout" class="sidebar-link sidebar-logout">
             <i class="fa-solid fa-right-from-bracket"></i>
             <span>Déconnexion</span>
         </a>

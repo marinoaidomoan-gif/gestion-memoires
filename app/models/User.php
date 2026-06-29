@@ -17,7 +17,7 @@ class User extends Model {
         $user = $stmt->fetch();
 
         if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['idUser'] = $user['idUser'];
+            $_SESSION['idUser'] = $user['id_user'];
             $_SESSION['name']   = $user['name'];
             $_SESSION['email']  = $user['email'];
             $_SESSION['role']   = $user['role'];
@@ -30,6 +30,19 @@ class User extends Model {
     // Déconnexion
     // -------------------------------------------------------
     public function seDeconnecter(): void {
+        // On vide toutes les variables de session en mémoire
+        $_SESSION = [];
+        
+        // On détruit le cookie de session si nécessaire (optionnel mais propre)
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
+            );
+        }
+
+        // On détruit la session sur le serveur
         session_destroy();
     }
 

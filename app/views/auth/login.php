@@ -33,4 +33,6 @@
         <a href="/gestion_memoires/public/index.php?route=register">S'inscrire</a>
     </p>
 
+    </main>
+
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

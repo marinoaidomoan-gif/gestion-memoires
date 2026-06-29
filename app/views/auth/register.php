@@ -72,4 +72,6 @@
         <a href="/gestion_memoires/public/index.php?route=login">Se connecter</a>
     </p>
 
+    </main>
+
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>
