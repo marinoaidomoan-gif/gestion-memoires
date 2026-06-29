@@ -32,7 +32,7 @@ $estConnecte = isset($_SESSION['idUser']);
                     <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
                 </a>
             <?php else: ?>
-                <a href="/gestion_memoires/public/index.php?route=auth/login">
+                <a href="/gestion_memoires/public/index.php?route=login">
                     <i class="fa-solid fa-right-to-bracket"></i> Connexion
                 </a>
             <?php endif; ?>

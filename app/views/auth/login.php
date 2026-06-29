@@ -1,6 +1,5 @@
 <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
-<main class="main-public">
     <div class="container" style="max-width: 500px;">
         <div class="card">
             <h2><i class="fas fa-sign-in-alt"></i> Connexion</h2>
@@ -28,6 +27,10 @@
             </form>
         </div>
     </div>
-</main>
+
+    <p class="mt-2" style="text-align:center; font-size:0.85rem;">
+        Pas encore de compte ? 
+        <a href="/gestion_memoires/public/index.php?route=register">S'inscrire</a>
+    </p>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

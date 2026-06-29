@@ -1,6 +1,5 @@
 <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
-<main class="main-public">
     <div class="container" style="max-width: 500px;">
         <div class="card">
             <h2><i class="fas fa-user-plus"></i> Créer un compte</h2>
@@ -67,6 +66,10 @@
             </form>
         </div>
     </div>
-</main>
+
+    <p class="mt-2" style="text-align:center; font-size:0.85rem;">
+        Déjà un compte ? 
+        <a href="/gestion_memoires/public/index.php?route=login">Se connecter</a>
+    </p>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>
