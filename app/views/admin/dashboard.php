@@ -25,8 +25,8 @@
             <h3><?= $totalMemoires ?></h3>
         </div>
     </div>
-    <?php foreach ($statsStatuts as $stat): ?>
-        <?php $map = $statsMap[$stat['statut']] ?? null; ?>
+    <?php foreach ($statsStatuts as $statutNom => $statValeur): ?>
+            <?php $map = $statsMap[$statutNom] ?? null; ?>
         <?php if ($map): ?>
             <div class="stat-card">
                 <div class="stat-icon" style="background: rgba(var(--<?= $map['color'] ?>-rgb, 243,156,18),0.12); color: var(--<?= $map['color'] ?>);">
@@ -34,7 +34,7 @@
                 </div>
                 <div class="stat-info">
                     <p><?= $map['label'] ?></p>
-                    <h3><?= $stat['total'] ?? 0 ?></h3>
+                            <h3><?= $statValeur ?></h3>
                 </div>
             </div>
         <?php endif; ?>
@@ -161,12 +161,12 @@
                             </span>
                         </td>
                         <td class="actions-cell">
-                            <?php if ($u['idUser'] !== $_SESSION['idUser']): ?>
+                            <?php if ($u['id_user'] != ($_SESSION['user']['id'] ?? $_SESSION['idUser'] ?? $_SESSION['id_user'] ?? 0)): ?>
                                 <form method="POST"
                                       action="/gestion_memoires/public/index.php?route=admin/supprimer-user"
                                       style="display:inline;"
                                       onsubmit="return confirm('Supprimer cet utilisateur ?')">
-                                    <input type="hidden" name="idUser" value="<?= $u['idUser'] ?>">
+                                    <input type="hidden" name="idUser" value="<?= $u['id_user'] ?>">
                                     <button type="submit" class="btn btn-small btn-danger">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>

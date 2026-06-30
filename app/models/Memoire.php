@@ -34,19 +34,19 @@ class Memoire extends Model {
     // -------------------------------------------------------
     // Tous les mémoires avec infos auteur/encadrant
     // -------------------------------------------------------
-    public function findAll(): array {
-        $stmt = $this->db->query("
+    public function findAll() {
+        $query = "
             SELECT m.*,
-                   u.name  AS nom_etudiant,
-                   p.name  AS nom_professeur,
+                   u.name AS nom_etudiant,
+                   p.name AS nom_professeur,
                    p2.name AS nom_directeur
             FROM memoire m
-            LEFT JOIN users u  ON u.idUser  = m.idEtudiant
-            LEFT JOIN users p  ON p.idUser  = m.idProfesseur
-            LEFT JOIN users p2 ON p2.idUser = m.idDirecteur
+            LEFT JOIN users u ON u.id_user = m.idEtudiant
+            LEFT JOIN users p ON p.id_user = m.idProfesseur
+            LEFT JOIN users p2 ON p2.id_user = m.idDirecteur
             ORDER BY m.date_soumission DESC
-        ");
-        return $stmt->fetchAll();
+        ";
+        return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // -------------------------------------------------------

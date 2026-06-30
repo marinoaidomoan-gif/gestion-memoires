@@ -160,24 +160,23 @@ class User extends Model {
     // -------------------------------------------------------
     // Lister tous les utilisateurs avec leurs infos de rôle
     // -------------------------------------------------------
-    public function getAllWithDetails(): array {
-        $stmt = $this->db->query(
-            "SELECT u.*,
-                    ed.niveau     AS niveau_diplome,
-                    ed.filiere    AS filiere_diplome,
-                    ed.annee_diplome,
-                    ec.niveau     AS niveau_consulteur,
-                    ec.filiere    AS filiere_consulteur,
-                    p.specialite, p.grade, p.departement,
-                    de.bureau
-             FROM users u
-             LEFT JOIN etudiantdiplome    ed ON u.idUser = ed.idUser
-             LEFT JOIN etudiantconsulteur ec ON u.idUser = ec.idUser
-             LEFT JOIN professeur          p ON u.idUser = p.idUser
-             LEFT JOIN directeuretudes    de ON u.idUser = de.idUser
-             ORDER BY u.date_inscription DESC"
-        );
-        return $stmt->fetchAll();
+    public function getAllWithDetails() {
+        $query = "SELECT u.*,
+                         ed.niveau AS niveau_diplome,
+                         ed.filiere AS filiere_diplome,
+                         ed.annee_diplome,
+                         ec.niveau AS niveau_consulteur,
+                         ec.filiere AS filiere_consulteur,
+                         p.specialite, p.grade, p.departement,
+                         de.bureau
+                  FROM users u
+                  LEFT JOIN etudiantdiplome ed ON u.id_user = ed.idUser
+                  LEFT JOIN etudiantconsulteur ec ON u.id_user = ec.idUser
+                  LEFT JOIN professeur p ON u.id_user = p.idUser
+                  LEFT JOIN directeuretudes de ON u.id_user = de.idUser
+                  ORDER BY u.name ASC";
+                  
+        return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // -------------------------------------------------------

@@ -19,23 +19,41 @@ class ProfesseurController extends Controller {
     // GET /index.php?route=professeur/dashboard
     // Mémoires encadrés + stats
     // -------------------------------------------------------
-    public function dashboard(): void {
-        $this->requiertRole('professeur');
+        public function dashboard(): void {
+        $idProfesseur = $_SESSION['user']['id'] ?? null;
+        
+        $mesMemoires = $this->professeur->getMesMemoires($idProfesseur);
+        if (!$mesMemoires) {
+            $mesMemoires = [];
+        }
 
-        $mesMemoires = $this->professeur->getMesMemoires();
-        $profil      = $this->professeur->getMonProfil();
-
+        // --- GÉNÉRATION DYNAMIQUE DES STATISTIQUES POUR LA VUE ---
         $stats = [
-            'total'      => count($mesMemoires),
-            'en_attente' => count(array_filter($mesMemoires, fn($m) => $m['statut'] === 'en_attente')),
-            'valide'     => count(array_filter($mesMemoires, fn($m) => $m['statut'] === 'valide')),
-            'rejete'     => count(array_filter($mesMemoires, fn($m) => $m['statut'] === 'rejete')),
+            'en_attente' => 0,
+            'valide'     => 0,
+            'rejete'     => 0,
+            'total'      => count($mesMemoires)
         ];
 
+        // On parcourt les mémoires pour alimenter les compteurs selon le statut exact en BDD
+        foreach ($mesMemoires as $m) {
+            $statut = $m['statut'] ?? '';
+            if ($statut === 'en_attente') {
+                $stats['en_attente']++;
+            } elseif ($statut === 'valide') {
+                $stats['valide']++;
+            } elseif ($statut === 'rejete' || $statut === 'refuse') {
+                $stats['rejete']++;
+            }
+        }
+
+        $profil = $this->professeur->getMonProfil();
+
+        // Ajout de la variable 'stats' dans le tableau envoyé au render
         $this->render('professeur/dashboard', [
             'mesMemoires' => $mesMemoires,
             'profil'      => $profil,
-            'stats'       => $stats,
+            'stats'       => $stats
         ]);
     }
 

@@ -29,16 +29,16 @@ class Professeur extends User {
     // -------------------------------------------------------
     // Mémoires encadrés par ce professeur
     // -------------------------------------------------------
-    public function getMesMemoires(): array {
-        $stmt = $this->db->prepare(
-            "SELECT m.*, u.name AS nom_etudiant
-             FROM memoire m
-             LEFT JOIN users u ON m.idEtudiant = u.idUser
-             WHERE m.idProfesseur = ?
-             ORDER BY m.date_soumission DESC"
-        );
-        $stmt->execute([$_SESSION['idUser']]);
-        return $stmt->fetchAll();
+    public function getMesMemoires($idProfesseur) {
+        $query = "SELECT m.*, u.name AS nom_etudiant
+                FROM memoire m
+                LEFT JOIN users u ON m.idEtudiant = u.id_user
+                WHERE m.idProfesseur = ?
+                ORDER BY m.date_soumission DESC";
+                
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$idProfesseur]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // -------------------------------------------------------
@@ -82,13 +82,13 @@ class Professeur extends User {
     public function getMonProfil(): ?array {
         $stmt = $this->db->prepare(
             "SELECT u.*, p.specialite, p.grade, p.departement
-             FROM users u
-             JOIN professeur p ON u.idUser = p.idUser
-             WHERE u.idUser = ?"
+            FROM users u
+            JOIN professeur p ON u.id_user = p.idUser
+            WHERE u.id_user = ?"
         );
-        $stmt->execute([$_SESSION['idUser']]);
-        $result = $stmt->fetch();
-        return $result ?: null;
+        $stmt->execute([$_SESSION['user']['id'] ?? null]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result : null;
     }
 
     // -------------------------------------------------------

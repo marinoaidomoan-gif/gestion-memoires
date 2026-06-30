@@ -32,9 +32,7 @@ class AdminController extends Controller {
         $profil            = $this->directeur->getMonProfil();
 
         // Liste des professeurs pour le select d'assignation
-        $professeurs = Professeur::getTous(
-            $this->memoireModel->db
-        );
+        $professeurs = $this->memoireModel->getProfesseurs();
 
         $this->render('admin/dashboard', [
             'memoiresEnAttente' => $memoiresEnAttente,

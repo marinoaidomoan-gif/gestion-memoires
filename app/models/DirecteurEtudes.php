@@ -104,16 +104,15 @@ class DirecteurEtudes extends User {
     // -------------------------------------------------------
     // Mémoires en attente (tableau de bord directeur)
     // -------------------------------------------------------
-    public function getMemoiresEnAttente(): array {
-        $stmt = $this->db->query(
-            "SELECT m.*, u.name AS nom_etudiant, up.name AS nom_professeur
-             FROM memoire m
-             LEFT JOIN users u  ON m.idEtudiant   = u.idUser
-             LEFT JOIN users up ON m.idProfesseur = up.idUser
-             WHERE m.statut = 'en_attente'
-             ORDER BY m.date_soumission ASC"
-        );
-        return $stmt->fetchAll();
+    public function getMemoiresEnAttente() {
+        $query = "SELECT m.*, u.name AS nom_etudiant, up.name AS nom_professeur
+                FROM memoire m
+                LEFT JOIN users u ON m.idEtudiant = u.id_user
+                LEFT JOIN users up ON m.idProfesseur = up.id_user
+                WHERE m.statut = 'en_attente'
+                ORDER BY m.date_soumission ASC";
+                
+        return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // -------------------------------------------------------
@@ -139,12 +138,12 @@ class DirecteurEtudes extends User {
     public function getMonProfil(): ?array {
         $stmt = $this->db->prepare(
             "SELECT u.*, de.bureau
-             FROM users u
-             JOIN directeuretudes de ON u.idUser = de.idUser
-             WHERE u.idUser = ?"
+            FROM users u
+            JOIN directeuretudes de ON u.id_user = de.idUser
+            WHERE u.id_user = ?"
         );
-        $stmt->execute([$_SESSION['idUser']]);
-        $result = $stmt->fetch();
-        return $result ?: null;
+        $stmt->execute([$_SESSION['user']['id'] ?? null]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result : null;
     }
 }
