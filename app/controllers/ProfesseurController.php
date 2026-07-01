@@ -126,11 +126,47 @@ class ProfesseurController extends Controller {
     // -------------------------------------------------------
     // GET /index.php?route=professeur/profil
     // -------------------------------------------------------
+        // GET /index.php?route=professeur/profil
     public function profil(): void {
-        $this->requiertRole('professeur');
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
+        // 1. Récupération des données du profil professeur connecté
+        $idProfesseur = $_SESSION['user']['id'] ?? null;
         $profil = $this->professeur->getMonProfil();
-        $this->render('professeur/profil', ['profil' => $profil]);
+
+        // 2. Récupération des mémoires pour alimenter le tableau de bord en arrière-plan
+        $mesMemoires = $this->professeur->getMesMemoires($idProfesseur);
+        if (!$mesMemoires) {
+            $mesMemoires = [];
+        }
+
+        // 3. Calcul dynamique des statistiques ($stats) indispensables à la vue arrière-plan
+        $stats = [
+            'en_attente' => 0,
+            'valide'     => 0,
+            'rejete'     => 0,
+            'total'      => count($mesMemoires)
+        ];
+
+        foreach ($mesMemoires as $m) {
+            $statut = $m['statut'] ?? '';
+            if ($statut === 'en_attente') {
+                $stats['en_attente']++;
+            } elseif ($statut === 'valide') {
+                $stats['valide']++;
+            } elseif ($statut === 'rejete' || $statut === 'refuse') {
+                $stats['rejete']++;
+            }
+        }
+
+        // 4. Envoi complet des variables pour que l'arrière-plan charge sans planter
+        $this->render('professeur/profil', [
+            'profil'      => $profil,
+            'mesMemoires' => $mesMemoires,
+            'stats'       => $stats
+        ]);
     }
 
     // -------------------------------------------------------

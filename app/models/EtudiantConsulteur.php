@@ -38,8 +38,8 @@ class EtudiantConsulteur extends User {
                     (SELECT COUNT(*) FROM commentaire c WHERE c.idMemoire = m.idMemoire)
                         AS nb_commentaires
              FROM memoire m
-             LEFT JOIN users u  ON m.idEtudiant   = u.idUser
-             LEFT JOIN users up ON m.idProfesseur = up.idUser
+             LEFT JOIN users u  ON m.idEtudiant   = u.id_user
+             LEFT JOIN users up ON m.idProfesseur = up.id_user
              WHERE m.idMemoire = ? AND m.statut = 'valide'"
         );
         $stmt->execute([$idMemoire]);
@@ -55,7 +55,7 @@ class EtudiantConsulteur extends User {
                        (SELECT COUNT(*) FROM likes l WHERE l.idMemoire = m.idMemoire) AS nb_likes,
                        (SELECT COUNT(*) FROM commentaire c WHERE c.idMemoire = m.idMemoire) AS nb_commentaires
                 FROM memoire m
-                LEFT JOIN users u ON m.idEtudiant = u.idUser
+                LEFT JOIN users u ON m.idEtudiant = u.id_user
                 WHERE m.statut = 'valide'";
 
         $params = [];
@@ -89,9 +89,9 @@ class EtudiantConsulteur extends User {
     public function getMonProfil(): ?array {
         $stmt = $this->db->prepare(
             "SELECT u.*, ec.niveau, ec.filiere
-             FROM users u
-             JOIN etudiantconsulteur ec ON u.idUser = ec.idUser
-             WHERE u.idUser = ?"
+            FROM users u
+            JOIN etudiantconsulteur ec ON u.id_user = ec.idUser
+            WHERE u.id_user = ?"
         );
         $stmt->execute([$_SESSION['idUser']]);
         $result = $stmt->fetch();

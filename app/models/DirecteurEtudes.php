@@ -142,8 +142,8 @@ class DirecteurEtudes extends User {
             JOIN directeuretudes de ON u.id_user = de.idUser
             WHERE u.id_user = ?"
         );
-        $stmt->execute([$_SESSION['user']['id'] ?? null]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result ? $result : null;
+        $stmt->execute([$_SESSION['idUser']]);
+        $result = $stmt->fetch();
+        return $result ?: null;
     }
 }

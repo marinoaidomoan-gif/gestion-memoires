@@ -138,8 +138,8 @@ class EtudiantDiplome extends User {
             JOIN etudiantdiplome ed ON u.id_user = ed.idUser
             WHERE u.id_user = ?"
         );
-        $stmt->execute([$_SESSION['user']['id'] ?? null]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result ? $result : null;
+        $stmt->execute([$_SESSION['idUser']]);
+        $result = $stmt->fetch();
+        return $result ?: null;
     }
 }

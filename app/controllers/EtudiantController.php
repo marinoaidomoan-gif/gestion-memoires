@@ -134,14 +134,27 @@ class EtudiantController extends Controller {
     // GET /index.php?route=etudiant/profil
     // -------------------------------------------------------
     public function profil(): void {
+        require_once __DIR__ . '/../models/EtudiantDiplome.php';
+        require_once __DIR__ . '/../models/EtudiantConsulteur.php';
+
         $this->requiertRoles(['etudiant_diplome', 'etudiant_consulteur']);
 
+        // 1. Récupération dynamique des informations du profil
         if ($_SESSION['role'] === 'etudiant_diplome') {
             $profil = (new EtudiantDiplome())->getMonProfil();
+            $memoires = []; // Pas de catalogue requis pour l'étudiant diplômé
         } else {
-            $profil = (new EtudiantConsulteur())->getMonProfil();
+            $modelConsulteur = new EtudiantConsulteur();
+            $profil = $modelConsulteur->getMonProfil();
+            
+            // On récupère le catalogue de mémoires requis par l'arrière-plan du consulteur
+            $memoires = $modelConsulteur->rechercherMemo() ?: [];
         }
 
-        $this->render('etudiant/profil', ['profil' => $profil]);
+        // 2. Envoi groupé du profil ET de la liste des mémoires pour l'arrière-plan
+        $this->render('etudiant/profil', [
+            'profil'   => $profil,
+            'memoires' => $memoires
+        ]);
     }
 }

@@ -11,7 +11,7 @@
         <div class="stat-icon"><i class="fa-solid fa-folder-open"></i></div>
         <div class="stat-info">
             <p>Total soumissions</p>
-            <h3><?= $stats['total'] ?></h3>
+            <h3><?= $stats['total'] ?? 0 ?></h3>
         </div>
     </div>
     <div class="stat-card">
@@ -20,7 +20,7 @@
         </div>
         <div class="stat-info">
             <p>En attente</p>
-            <h3><?= $stats['en_attente'] ?></h3>
+            <h3><?= $stats['en_attente'] ?? 0 ?></h3>
         </div>
     </div>
     <div class="stat-card">
@@ -29,7 +29,7 @@
         </div>
         <div class="stat-info">
             <p>Validés</p>
-            <h3><?= $stats['valide'] ?></h3>
+            <h3><?= $stats['valide'] ?? 0 ?></h3>
         </div>
     </div>
     <div class="stat-card">
@@ -38,7 +38,7 @@
         </div>
         <div class="stat-info">
             <p>Rejetés</p>
-            <h3><?= $stats['rejete'] ?></h3>
+            <h3><?= $stats['rejete'] ?? 0 ?></h3>
         </div>
     </div>
 </div>

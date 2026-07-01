@@ -86,9 +86,9 @@ class Professeur extends User {
             JOIN professeur p ON u.id_user = p.idUser
             WHERE u.id_user = ?"
         );
-        $stmt->execute([$_SESSION['user']['id'] ?? null]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result ? $result : null;
+        $stmt->execute([$_SESSION['idUser']]);
+        $result = $stmt->fetch();
+        return $result ?: null;
     }
 
     // -------------------------------------------------------
