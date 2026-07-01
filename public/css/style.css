@@ -983,3 +983,376 @@ body.is-public .site-footer {
     width: 100% !important;
     margin-top: auto; /* Force le positionnement tout en bas */
 }
+
+/* ============================================================
+   GestMémoire — Compléments Dashboard
+   Page header, tables, empty-state, badges supplémentaires
+   ============================================================ */
+
+/* ── Page header ────────────────────────────────────────────── */
+.page-header {
+  margin-bottom: 1.75rem;
+}
+.page-header h1 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.3rem;
+}
+.page-header h1 i { color: var(--accent); font-size: 1.5rem; }
+.page-header p { margin: 0; font-size: 0.9rem; }
+.page-header p strong { color: var(--text-primary); }
+
+/* ── Section header (au-dessus des tableaux/listes) ───────────── */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.section-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+}
+.section-header h2 i { color: var(--accent); font-size: 1.05rem; }
+
+.result-count {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ── Empty state ────────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  background: var(--bg-card);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+}
+.empty-state i {
+  font-size: 2.2rem;
+  color: var(--text-muted);
+  opacity: 0.5;
+  margin-bottom: 0.85rem;
+  display: block;
+}
+.empty-state p { margin-bottom: 1rem; color: var(--text-secondary); }
+
+/* ── Tables (dashboards) ────────────────────────────────────── */
+.table-wrapper {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+
+.data-table thead {
+  background: var(--bg-sidebar);
+}
+
+.data-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 0.75rem 1rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.data-table tbody tr {
+  transition: background var(--transition);
+}
+.data-table tbody tr:hover {
+  background: var(--bg-card-hover);
+}
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.actions-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  white-space: nowrap;
+}
+
+/* ── Inline form (assigner professeur dans tableau) ────────────── */
+.inline-form {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.select-sm {
+  padding: 0.3rem 0.5rem;
+  font-size: 0.78rem;
+  width: auto;
+  min-width: 140px;
+}
+
+/* ── Boutons succès (valider mémoire) ───────────────────────── */
+.btn-success {
+  background: var(--success);
+  color: #fff;
+}
+.btn-success:hover { background: #27ae60; color: #fff; }
+
+/* ── Badge rôle (table utilisateurs) ───────────────────────── */
+.badge-role {
+  background: rgba(52,152,219,0.15);
+  color: var(--info);
+  border: 1px solid var(--info);
+  display: inline-block;
+  padding: 0.18rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* ── Responsive tables ──────────────────────────────────────── */
+@media (max-width: 768px) {
+  .data-table th,
+  .data-table td {
+    padding: 0.6rem 0.7rem;
+    font-size: 0.8rem;
+  }
+  .section-header { flex-direction: column; align-items: flex-start; }
+}
+
+/* ==========================================================================
+   DESIGN COMPOSANT : MODALE DE PROFIL PREMIUM (STUDIO STYLE)
+   ========================================================================== */
+
+/* Arrière-plan style verre dépoli (Glassmorphism) */
+.pro-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 15, 30, 0.7); /* Bleu nuit très profond transparent */
+    backdrop-filter: blur(12px) grayscale(20%); /* Floutage pro intense */
+    -webkit-backdrop-filter: blur(12px) grayscale(20%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: proFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Carte de la modale épurée */
+.pro-modal-card {
+    background: #111827; /* Fond sombre mat premium (Tailwind slate-900) */
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Bordure ultra fine et discrète */
+    border-radius: 16px;
+    width: 100%;
+    max-width: 440px;
+    padding: 2.5rem 2rem 2rem 2rem;
+    position: relative;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    animation: proScaleUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Bouton fermer minimaliste */
+.pro-modal-close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    color: #6b7280;
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.pro-modal-close:hover {
+    color: #f3f4f6;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Section En-tête de l'avatar */
+.pro-profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.pro-avatar-wrapper {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.pro-avatar {
+    width: 76px;
+    height: 76px;
+    background: linear-gradient(135deg, #1f2937, #111827);
+    border: 1px solid rgba(214, 158, 46, 0.3); /* Lueur dorée subtile */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #d69e2e; /* Or institutionnel */
+    box-shadow: 0 0 20px rgba(214, 158, 46, 0.1);
+}
+
+.pro-status-badge {
+    position: absolute;
+    bottom: 2px;
+    right: 4px;
+    width: 14px;
+    height: 14px;
+    background-color: #10b981; /* Vert connecté */
+    border: 2px solid #111827;
+    border-radius: 50%;
+}
+
+.pro-profile-name {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #f9fafb;
+    margin: 0 0 0.25rem 0;
+    letter-spacing: -0.02em;
+}
+
+.pro-profile-role {
+    font-size: 0.9rem;
+    color: #9ca3af;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Structure des données en liste moderne */
+.pro-profile-body {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.pro-info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.pro-info-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.pro-info-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    font-size: 0.95rem;
+}
+
+.pro-info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.pro-info-label {
+    font-size: 0.72rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.pro-info-value {
+    font-size: 0.95rem;
+    color: #e5e7eb;
+    font-weight: 500;
+}
+
+.accent-gold {
+    color: #margin;
+    color: #eab308;
+    font-weight: 600;
+}
+
+/* Pied de la modale bouton d'action */
+.pro-profile-footer {
+    display: flex;
+}
+
+.pro-btn-dismiss {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #1f2937;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: #e5e7eb;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.pro-btn-dismiss:hover {
+    background: #374151;
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+/* Animations d'affichage fluides */
+@keyframes proFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes proScaleUp {
+    from { transform: scale(0.96); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+

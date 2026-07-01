@@ -134,7 +134,7 @@
 <!-- Gestion utilisateurs -->
 <div class="section-header mt-3">
     <h2><i class="fa-solid fa-users"></i> Utilisateurs</h2>
-    <a href="/gestion_memoires/public/index.php?route=admin/creer-compte" class="btn btn-primary">
+    <a href="/gestion_memoires/public/index.php?route=register" class="btn btn-primary">
         <i class="fa-solid fa-user-plus"></i> Créer un compte
     </a>
 </div>
@@ -165,9 +165,9 @@
                                 <form method="POST"
                                       action="/gestion_memoires/public/index.php?route=admin/supprimer-user"
                                       style="display:inline;"
-                                      onsubmit="return confirm('Supprimer cet utilisateur ?')">
-                                    <input type="hidden" name="idUser" value="<?= $u['id_user'] ?>">
-                                    <button type="submit" class="btn btn-small btn-danger">
+                                      onsubmit="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?')">
+                                    <input type="hidden" name="id_user" value="<?= $u['id_user'] ?>">
+                                    <button type="submit" class="btn btn-danger btn-small" title="Supprimer">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </form>

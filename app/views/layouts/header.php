@@ -102,7 +102,15 @@
                     <a href="/gestion_memoires/public/index.php?route=<?= $dashRoute ?>">
                         <i class="fa-solid fa-gauge-high"></i> Tableau de bord
                     </a>
-                    <a href="/gestion_memoires/public/index.php?route=profil">
+                    <a href="/gestion_memoires/public/index.php?route=<?php
+                            $profilRoutes = [
+                                'etudiant_diplome'    => 'etudiant/profil',
+                                'etudiant_consulteur' => 'etudiant/profil',
+                                'professeur'          => 'professeur/profil',
+                                'directeur_etudes'    => 'admin/profil',
+                            ];
+                            echo $profilRoutes[$role] ?? 'memoires';
+                        ?>" class="sidebar-link">
                         <i class="fa-solid fa-user-pen"></i> Mon profil
                     </a>
                     <div class="dropdown-divider"></div>

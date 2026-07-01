@@ -14,7 +14,7 @@ $router = new Router();
 // Auth
 // -------------------------------------------------------
 $router->add('login',    'AuthController', 'login');
-$router->add('register', 'AuthController', 'register');
+$router->add('register', 'AuthController', 'register'); 
 $router->add('logout',   'AuthController', 'logout');
 
 // -------------------------------------------------------
@@ -49,14 +49,14 @@ $router->add('admin/dashboard',      'AdminController',      'dashboard');
 // Etudiant — pages supplémentaires
 // -------------------------------------------------------
 $router->add('etudiant/memoire', 'EtudiantController', 'voirMemoire');
-$router->add('etudiant/profil',  'EtudiantController', 'profil');
+$router->add('etudiant/profil',   'EtudiantController',   'profil');
 
 // -------------------------------------------------------
 // Professeur — pages supplémentaires
 // -------------------------------------------------------
 $router->add('professeur/memoire',  'ProfesseurController', 'voirMemoire');
 $router->add('professeur/evaluer',  'ProfesseurController', 'evaluer');
-$router->add('professeur/profil',   'ProfesseurController', 'profil');
+$router->add('professeur/profil', 'ProfesseurController', 'profil');
 
 // -------------------------------------------------------
 // Admin — gestion utilisateurs
@@ -65,7 +65,7 @@ $router->add('admin/creer-compte',         'AdminController', 'creerCompte');
 $router->add('admin/modifier-user',        'AdminController', 'modifierUser');
 $router->add('admin/supprimer-user',       'AdminController', 'supprimerUser');
 $router->add('admin/supprimer-commentaire','AdminController', 'supprimerCommentaire');
-$router->add('admin/profil',               'AdminController', 'profil');
+$router->add('admin/profil',      'AdminController',      'profil');
 
 // -------------------------------------------------------
 // Accueil → redirige vers liste mémoires

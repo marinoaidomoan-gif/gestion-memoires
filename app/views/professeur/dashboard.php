@@ -4,6 +4,12 @@
     <h1><i class="fa-solid fa-gauge-high"></i> Tableau de bord</h1>
     <p>Bienvenue, <strong><?= htmlspecialchars($profil['name'] ?? '') ?></strong>
         — <?= htmlspecialchars($profil['grade'] ?? '') ?>
+        <?php if (!empty($profil)): ?>
+            <p>Spécialité : <?= htmlspecialchars($profil['specialite']) ?></p>
+            <p>Grade : <?= htmlspecialchars($profil['grade']) ?></p>
+        <?php else: ?>
+            <p>Profil enseignant non complété en base de données.</p>
+        <?php endif; ?>
     </p>
 </div>
 

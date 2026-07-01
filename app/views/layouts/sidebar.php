@@ -213,7 +213,15 @@ function sidebarActive($route, $current) {
 
     <!-- Bas de sidebar : déconnexion -->
     <div class="sidebar-footer">
-        <a href="/gestion_memoires/public/index.php?route=auth/profil" class="sidebar-link">
+        <a href="/gestion_memoires/public/index.php?route=<?php
+                $profilRoutes = [
+                    'etudiant_diplome'    => 'etudiant/profil',
+                    'etudiant_consulteur' => 'etudiant/profil',
+                    'professeur'          => 'professeur/profil',
+                    'directeur_etudes'    => 'admin/profil',
+                ];
+                echo $profilRoutes[$role] ?? 'memoires';
+            ?>" class="sidebar-link">
             <i class="fa-solid fa-user-pen"></i>
             <span>Mon profil</span>
         </a>

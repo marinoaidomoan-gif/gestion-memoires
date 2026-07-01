@@ -204,11 +204,25 @@ class AdminController extends Controller {
     // -------------------------------------------------------
     // GET /index.php?route=admin/profil
     // -------------------------------------------------------
+        // GET /index.php?route=admin/profil
     public function profil(): void {
-        $this->requiertRole('directeur_etudes');
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
-        $profil = $this->directeur->getMonProfil();
-        $this->render('admin/profil', ['profil' => $profil]);
+        require_once __DIR__ . '/../models/DirecteurEtudes.php';
+        $directeurModel = new DirecteurEtudes();
+        $profil = $directeurModel->getMonProfil();
+
+        // On envoie le profil ET les données d'arrière-plan déjà stockées dans ton contrôleur
+        $this->render('admin/profil', [
+            'profil'            => $profil,
+            'memoiresEnAttente' => $this->memoiresEnAttente ?? [],
+            'statsStatuts'      => $this->statsStatuts ?? ['en_attente' => 0, 'valide' => 0, 'rejete' => 0],
+            'tousLesMemoires'   => $this->tousLesMemoires ?? [],
+            'tousLesUsers'      => $this->tousLesUsers ?? [],
+            'professeurs'       => $this->professeurs ?? []
+        ]);
     }
 
     // -------------------------------------------------------
